@@ -1,0 +1,151 @@
+{% extends "main.html" %}
+{% block css %}
+{% end %}
+{% block content %}
+<div class="row-fluid">
+	<div class="block-content collapse in">
+		<div class="span12">
+			<form class="form-horizontal" action="" method="post">
+				<fieldset>
+					{% raw xsrf_form_html() %}
+					<legend>命令操作界面</legend>
+                    {% if action == 'ips' %}
+					<div class="control-group">
+						<label class="control-label" for="host">主机IP(可多选): </label>
+						<div class="controls">
+							<select data-placeholder="选择需要执行命令的IP地址..." id="ipaddr"
+								class="chzn-select" multiple style="width: 350px;" tabindex="4">
+								<option value=""></option>
+								{% for i in data %}
+								<option value="{{ i['host_ip'] }}">{{ i['host_name'] }}</option>
+								{% end %}
+							</select>
+						</div>
+					</div>
+                    {% elif action == 'group' %}
+					<div class="control-group">
+						<label class="control-label" for="group">主机组: </label>
+						<div class="controls">
+							<select id="group" class="chzn-select" style="width: 350px;" tabindex="4">
+								{% for i in group %}
+									<option value="{{ i['host_group'] }}">{{ i['host_group'] }}</option>
+								{% end %}
+							</select>
+						</div>
+					</div>
+                    {% else %}
+					<div class="control-group">
+						<label class="control-label" for="host">主机IP: </label>
+						<div class="controls">
+							<select id="ipaddr" class="chzn-select" style="width: 350px;" tabindex="4">
+								<option value=""></option>
+								{% for i in data %}
+								<option value="{{ i['host_ip'] }}">{{ i['host_name'] }}</option>
+								{% end %}
+							</select>
+						</div>
+					</div>
+                    {% end %}
+					<div class="control-group">
+						<label class="control-label">命令输入框: </label>
+						<div class="controls">
+							<input type="text" class="span6" id="command">
+						</div>
+					</div>
+					<div class="form-actions">
+                        {% if action != "group" %}
+						<button type="button" class="btn btn-primary" id="show">提交命令</button>
+						{% else %}
+						<button type="button" class="btn btn-primary" id="groupshow">提交命令</button>
+						{% end %}
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>
+<div id="mydiv" class="row-fluid" style="display:None">
+	<pre class="prettyprint linenums pre-scrollable">
+		<p id="echo"></p>
+	</pre>
+</div>
+{% end %}
+{% block script %}
+<link href="{{ static_url('css/chosen.min.css') }}" rel="stylesheet" media="screen">
+<script src="{{ static_url('js/chosen.jquery.min.js') }}"></script>
+<script src="{{ static_url('layer/layer.js') }}"></script>
+<script type="text/javascript">
+$(".chzn-select").chosen();
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+    	$("#show").click(function(){
+	    $("#echo").empty();
+    	    var ips = "";
+	    if (!$("#ipaddr").val()){
+		alert('选择IP地址');
+		return false;
+	    }
+	    if (!$("#command").val()){
+		layer.tips('请输入命令','#command');
+		return false;
+	    }
+    	    if (typeof($("#ipaddr").val()) == "object"){
+    		var data = $("#ipaddr").val();
+		layer.msg("多个命令运行中",{icon:16,time:1000*data.length});
+    		for(var i=0; i<data.length;i++){
+    		    $.ajax({
+			type:"POST",
+			url:"/interface/command",
+			data:{_xsrf: $("[name='_xsrf']").val(),ipaddr:data[i],command:$("#command").val()},
+			success: function(msg){
+				$("#mydiv").show();
+				d = $("#echo").html();
+				$("#echo").html(d+msg);
+			}
+		    });
+    		}
+    	    }else{
+		layer.msg("命令正在运行",{icon:16,time:2000});
+    		$.ajax({
+			type:"POST",
+			url:"/interface/command",
+			data:{_xsrf: $("[name='_xsrf']").val(),ipaddr:$("#ipaddr").val(),command:$("#command").val()},
+			success: function(msg){
+				$("#mydiv").show();
+				$("#echo").html(msg);
+			}
+		});
+    	    }	
+    	});
+    	$("#groupshow").click(function(){
+	    $("#echo").empty();
+	    if (!$('#command').val()){
+		layer.tips('请输入命令','#command');
+		return false;
+	    }
+    	    $.ajax({
+    		type:"GET",
+		url:"/interface/command",
+		data:{group:$("#group").val(),time: new Date()},
+		success: function(msg){
+			var data = msg.split(",");
+			layer.msg("主机组命令运行中",{icon:16,time: 1000*data.length});
+			for(var i=0; i<data.length;i++){
+			    $.ajax({
+				type:"POST",
+				url:"/interface/command",
+				data:{_xsrf: $("[name='_xsrf']").val(),ipaddr:data[i],command:$("#command").val()},
+				success: function(msg){
+					$("#mydiv").show();
+					d = $("#echo").html();
+					$("#echo").html(d+msg);
+				}
+			    });
+			}
+		}
+    	    });
+    	});
+    });
+</script>
+{% end %}

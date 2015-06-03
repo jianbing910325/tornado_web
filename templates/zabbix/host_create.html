@@ -1,0 +1,86 @@
+{% extends "main.html" %}
+{% block title %}新增主机{% end %}
+{% block content %}
+<form action="" class="form-horizontal" method="post">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label">主机IP </label>
+			<div class="controls">
+				<input type="text" class="span6" id="hc_host" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">主机名 </label>
+			<div class="controls">
+				<input type="text" class="span6" id="hc_name" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">模板ID </label>
+			<div class="controls">
+				<input type="text" class="span6" id="hc_templateid" />
+				<span class="help-block">提示: 填写该主机需要的模板，多个逗号分隔</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">主机组ID </label>
+			<div class="controls">
+				<input type="text" class="span6" id="hc_hostgroupid" />
+				<span class="help-block">提示: (必填)填写主机需加入的主机组，多个逗号分隔</span>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary" id="hc_button"><i class="icon-ok icon-red"></i> 添加主机</button>
+		</div>
+	</fieldset>
+</form>
+{% end %}
+{% block script %}
+	<script>
+		$("#hc_button").click(function(){
+			if (!$("#hc_host").val() || !$("#hc_name").val() || !$("#hc_hostgroupid").val()) {
+				alert("主机IP,主机名,主机组ID都为必填项，请填写!");
+				return false;
+			}
+			
+			var hostgroups = $("#hc_hostgroupid").val().split(",");
+			
+			var template = new Array();
+			var hostgroup = new Array();
+			
+			for (var i=0; i<hostgroups.length; i++){
+				hostgroup.push({"groupid": hostgroups[i]});
+			}
+			
+			var thing = {"host": $("#hc_host").val(),
+						 "name": $("#hc_name").val(),
+						 "interfaces": [{"type": 1,
+										 "main": 1,
+										 "useip": 1,
+										 "ip": $("#hc_host").val(),
+										 "dns": "",
+										 "port": "10050"
+										 }],
+						 "groups": hostgroup
+					};
+					
+			if ($("#hc_templateid").val()){
+				var templates = $("#hc_templateid").val().split(",");
+				for (var i=0; i<templates.length; i++){
+					template.push({"templateid": templates[i]});
+				}
+				thing["templates"] = template;
+			}
+			$.post("/zabbix/host/create",
+				{_xsrf: getCookie("_xsrf"), params: jQuery.toJSON(thing), time: new Date()},
+				function(msg) {
+					var obj = jQuery.parseJSON(msg);
+					if ( typeof obj == 'string' ){
+						alert(obj);
+					}else{
+						alert("主机:"+$("#hc_name").val()+"创建成功,主机IP:"+$("#hc_host").val()+" 主机ID: "+obj.hostids);
+					}
+			})
+		});
+	</script>
+{% end %}

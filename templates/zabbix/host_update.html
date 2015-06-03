@@ -1,0 +1,95 @@
+{% extends "main.html" %}
+{% block title %}修改主机{% end %}
+{% block content %}
+<form action="" class="form-horizontal" method="post">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label">主机ID </label>
+			<div class="controls">
+				<input type="text" class="span6" id="hu_id" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">替换主机组 </label>
+			<div class="controls">
+				<input type="text" class="span6" id="hu_hostgroups" />
+				<span class="help-block">提示: 删除多个主机组(ID)用逗号分隔</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">替换模板 </label>
+			<div class="controls">
+				<input type="text" class="span6" id="hu_templates" />
+				<span class="help-block">提示: 替换多个模板(ID)用逗号分隔</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">清除模板 </label>
+			<div class="controls">
+				<input type="text" class="span6" id="hu_templates_clear" />
+				<span class="help-block">提示: 删除多个模板(ID)用逗号分隔</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">主机状态 </label>
+			<div class="controls">
+				<input type="text" class="span6" id="hu_status" />
+				<span class="help-block">提示: 主机状态为0(启用)|1(禁用)</span>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary" id="hu_button"><i class="icon-ok icon-red"></i> 修改主机</button>
+		</div>
+	</fieldset>
+</form>
+{% end %}
+{% block script %}
+	<script>
+		$("#hu_button").click(function(){
+			if (!( $("#hu_id").val() && ( $("#hu_hostgroups").val() || $("#hu_templates").val() || $("#hu_templates_clear").val() || $("#hu_status").val() ))){
+				alert("除填写主机ID外,其他必填写一项作为处理!!!");
+				return false;
+			}
+			
+			var thing = {"hostid": $("#hu_id").val()};
+			if ($("#hu_hostgroups").val()){
+				var hostgroups = $("#hu_hostgroups").val().split(",");
+				var hostgroup = new Array();
+				for (var i=0; i<hostgroups.length; i++){
+					hostgroup.push({"groupid": hostgroups[i]});
+				}
+				thing["groups"] = hostgroup;
+			}
+			if ($("#hu_templates").val()){
+				var templates = $("#hu_templates").val().split(",");
+				var template = new Array();
+				for (var i=0; i<templates.length; i++){
+					template.push({"templateid": templates[i]});
+				}
+				thing["templates"] = template;
+			}
+			if ($("#hu_templates_clear").val()){
+				var templates_clear = $("#hu_templates_clear").val().split(",");
+				var template_clear = new Array();
+				for (var i=0; i<templates_clear.length; i++){
+					template_clear.push({"templateid": templates_clear[i]});
+				}
+				thing["templates_clear"] = template_clear;
+			}
+			if ($("#hu_status").val()){
+				thing["status"] = $("#hu_status").val();
+			}
+			alert(jQuery.toJSON(thing));
+			$.post("/zabbix/host/update",
+				{_xsrf: getCookie("_xsrf"), params: jQuery.toJSON(thing), time: new Date()},
+				function(msg) {
+					var obj = jQuery.parseJSON(msg);
+					if ( typeof obj == 'string' ){
+						alert(obj);
+					}else{
+						alert("主机: ID为"+obj.hostids+"更改成功.");
+					}
+			}); 			
+		});
+	</script>
+{% end %}

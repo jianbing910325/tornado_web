@@ -1,0 +1,37 @@
+{% extends "main.html" %}
+{% block title %}新增主机组{% end %}
+{% block content %}
+<form action="" class="form-horizontal" method="post">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label">主机组名 </label>
+				<div class="controls">
+					<input type="text" class="span6" id="hgc_name" />
+				</div>
+		</div>
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary" id="hgc_button"><i class="icon-ok icon-red"></i> 添加主机</button>
+		</div>
+	</fieldset>
+</form>
+{% end %}
+{% block script %}
+	<script>
+		$("#hgc_button").click(function(){
+			if (!$("#hgc_name").val()){
+					alert("请输入主机组名!!!");
+					return false;
+			}
+			$.post("/zabbix/hostgroup/create",
+				{_xsrf: getCookie("_xsrf"), params: jQuery.toJSON({name: $("#hgc_name").val()}), time: new Date()},
+				function(msg) {
+					var obj = jQuery.parseJSON(msg);
+					if ( typeof obj == 'string' ){
+						alert(obj);
+					}else{
+						alert("主机组: "+$("#hgc_name").val()+"创建成功,主机组ID: "+obj.groupids);
+					}
+			})
+		});
+	</script>
+{% end %}

@@ -1,0 +1,185 @@
+{% extends "main.html" %}
+{% autoescape None %}
+{% block css %}
+<link href="{{ static_url('css/DT_bootstrap.css') }}" rel="stylesheet" media="screen">
+{% end %}
+{% block content %}
+<div class="row-fuild">
+    <div class="block">
+	<div class="navbar navbar-inner block-header">
+	    <div class="muted pull-left">{{ page }}</div>
+	</div>
+	<div class="block-content collapse in">
+	    <form class="form-horizontal" action="" method="post">
+		<div class="control-group">
+		    <label class="control-label" for="sel">选择同步IP地址: </label>
+		    <div class="controls">
+	    		<select data-placeholder="选择需要同步文件的IP地址..." id="sel" class="chzn-select" multiple style="width:350px;" tabindex="4">
+          		    <option value=""></option>
+          		    {% for i in ips %}
+          			<option value="{{ i['host_ip'] }}">{{ i['host_name'] }}</option>
+          		    {% end %}
+	    	    </select>
+	    	</div>
+	    </div>
+	    <div class="control-group">
+		    <label class="control-label" for="sel">存放路径: </label>
+		    <div class="controls">
+				<input type="text" id="path"/>
+				<span class="help-block">例如: /usr/local/opt</span>
+		    </div>
+	    </div>
+		<table cellpadding="0" cellspacing="0" border="0"
+					class="table table-striped table-bordered  table-hover table-condensed table-responsive" id="example">
+		    <thead>
+		        <tr>
+			    <th style="text-align: center;">选择</th>
+			    <th style="text-align: center;">所在目录</th>
+			    <th style="text-align: center;">文件名</th>
+			    <th style="text-align: center;">文件大小</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		    {% for i in upload_files %}
+			<tr>
+			    <td style="text-align: center;">
+			    <input type="checkbox" name="checkfile[]" value="{{ i['path'].strip('\"') }}/{{ i['new_filename'] }}">
+	                    </td>
+			    <td style="text-align: center;">{{ i["path"] }}</td>
+			    <td style="text-align: center;" title="{{ i['old_filename'] }}">{{ i["new_filename"] }}</td>
+			    <td style="text-align: center;">{{ i["size"] }}K</td>
+			</tr>
+		    {% end %}
+		    </tbody>
+                </table>
+		<div class="form-actions">
+		     <button type="button" class="btn btn-success" id="plus"><i class="icon-plus icon-white"></i>  全选</button>&nbsp;&nbsp;
+		     <button type="button" class="btn btn-warning" id="minus"><i class="icon-minus icon-white"></i>  全不选</button>&nbsp;&nbsp;
+		     <button type="button" class="btn btn-primary" id="sync"><i class="icon-retweet icon-white"></i>  同步</button>&nbsp;&nbsp;
+		     <button type="button" class="btn btn-danger" id="delete"><i class="icon-remove icon-white"></i>  删除</button>
+		</div>
+	    </form>
+	</div>
+    </div>
+</div>
+<div id="mydiv" class="row-fluid" style="display:None">
+	<pre class="prettyprint linenums pre-scrollable">
+		<p id="echo"></p>
+	</pre>
+</div>
+{% end %}
+{% block script %}
+<link href="{{ static_url('css/chosen.min.css') }}" rel="stylesheet" media="screen">
+<script src="{{ static_url('js/chosen.jquery.min.js') }}"></script>
+<script src="{{ static_url('js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ static_url('js/DT_bootstrap.js') }}"></script>
+<script src="{{ static_url('layer/layer.js') }}"></script>
+<script type="text/javascript">
+    $(".chzn-select").chosen();
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	function getCookie(name) {
+		var c = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+		return c ? c[1] : undefined;
+	}
+	$("#plus").click(function(){
+		$(":checkbox").attr("checked","true"); 
+	});
+	$("#minus").click(function(){
+		$(":checkbox").removeAttr("checked"); 
+	}); 
+	$("#sync").click(function(){
+	    $("#echo").empty();
+	    var ips = $("#sel").val();
+	    var path = $("#path").val();
+	    if(ips == '' || path == ''){
+		alert("请选择同步的IP地址或填写路径");
+	    }else{
+		var files= new Array();
+		$(":checkbox:checked").each(function(){ 
+		    files.push($(this).val());
+		});
+		if (0 == files.length){
+		    alert("请选择需要同步的文件！");
+		}else{
+		    layer.load(2);
+		    if (ips.length == 1){
+			$.post("/interface/file",
+				{_xsrf: getCookie("_xsrf"), file: files.join(","), ipaddr: ips[0], remote: path, time: new Date()},
+				function (msg){
+				    $("#mydiv").show();
+				    $("#echo").html(msg);
+				    layer.closeAll('loading');
+			});
+			return true;
+		    }
+		    for(var i=0; i<ips.length;i++){
+			$.ajax({
+				type: "POST",
+				url: "/interface/file",
+				data: {_xsrf: getCookie("_xsrf"), file: files.join(","), ipaddr: ips[i], remote: path},
+				success: function(msg){
+					$("#mydiv").show();
+					d = $("#echo").html();
+					$("#echo").html(d+msg);
+					if (ips.length - i == 1){
+			    		    layer.closeAll('loading');
+					}
+				}
+			});
+		    }
+		}
+	    }
+	});
+	/*$("#delete").click(function(){
+            if(confirm("确定要删除文件么？")) {
+                var files = new Array();
+                $(":checkbox:checked").each(function () {
+                    files.push($(this).val());
+                });
+                if (0 == files.length) {
+                    alert("请选择需要删除的文件！");
+		    return false;
+                } else {
+                    $.ajax({
+                            type: "GET",
+                    	    url: "/interface/file",
+                    	    data: "delete=" + files,
+                    	    success: function (msg) {
+                        	alert(msg);
+                        	$(":checkbox:checked").parent().parent().remove();
+                        	location.reload();
+                    	    }
+                    });
+                }
+            }else{
+                location.reload();
+            }
+	});*/
+	$("#delete").click(function(){
+	    layer.confirm("确定要删除所选文件么?",{icon:3, title: '提示'},function(index){
+		var files = new Array();
+		$(":checkbox:checked").each(function(){
+		    files.push($(this).val());
+		});
+		if (0 == files.length){
+		    layer.alert('请选择需要删除的文件!',{icon: 1});
+		    return false;
+		}else{
+                    $.ajax({
+                            type: "GET",
+                    	    url: "/interface/file",
+                    	    data: "delete=" + files,
+                    	    success: function (msg) {
+		    		layer.alert(msg);
+				$(":checkbox:checked").parent().parent().remove();
+                                location.reload();
+			    }
+		    });
+		}
+	    });
+	});
+});
+</script>
+{% end %}

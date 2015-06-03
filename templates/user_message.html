@@ -1,0 +1,64 @@
+{% extends "main.html" %}
+{% block content %}
+<div class="row-fluid">
+    <div class="block">
+	<div class="navbar navbar-inner block-header">
+	    <div class="muted pull-left">{{ page }}</div>
+	</div>
+	<div class="block-content collapse in">
+	    <div class="span12">
+		<form action="" class="form-horizontal" method="post">
+		    <fieldset>
+			<div class="control-group">
+                            <label class="control-label" for="email">Email</label>
+                            <div class="controls">
+                                <input class="input-xlarge disabled" id="email" type="text" placeholder="Disabled input here..." disabled="" value="{{ data['user_email'] }}">
+                            </div>
+                        </div>
+			<div class="control-group">
+			    <label class="control-label" for="name">用户名</label>
+			    <div class="controls">
+				<input type="text" id="name" data-required="1" class="span6 m-wrap" value="{{ data['user_name'] }}"/>
+			    </div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label" for="qq">qq号码</label>
+			    <div class="controls">
+				<input id="qq" name="qq" type="text" class="span6 m-wrap" value="{{ data['user_qq'] }}"/>
+			    </div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label" for="phone">手机号</label>
+			    <div class="controls">
+				<input id="phone" name="phone" type="text" class="span6 m-wrap" value="{{ data['user_phone'] }}" />
+			    </div>
+			</div>
+			<div class="form-actions">
+			    <button type="button" class="btn btn-primary" id="update_user"><i class="icon-ok icon-red"></i> 修改用户信息</button>
+			</div>
+		    </fieldset>
+		</form>
+	    </div>
+	</div>
+    </div>
+</div>
+{% end %}
+{% block script %}
+<script src="{{ static_url('js/jquery.uniform.min.js') }}"></script>
+<script src="{{ static_url('js/jquery.json.min.js') }}"></script>
+<script src="{{ static_url('layer/layer.js') }}"></script>
+<script>
+	function getCookie(name) {
+		var c = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+		return c ? c[1] : undefined;
+	}
+	$("#update_user").click(function(){
+	    var thing = {"name": $("#name").val(), "qq": $("#qq").val(), "phone": $("#phone").val()};
+		$.post("/userpost",
+			{_xsrf: getCookie("_xsrf"), user_data: jQuery.toJSON(thing), time: new Date()},
+			function(msg) {
+				layer.alert(msg);
+		});
+	});
+</script>
+{% end %}

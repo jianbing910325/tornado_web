@@ -1,0 +1,67 @@
+{% extends "main.html" %}
+{% block title %}新增模板{% end %}
+{% block content %}
+<form action="" class="form-horizontal" method="post">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label">模板名 </label>
+			<div class="controls">
+				<input type="text" class="span6" id="tc_name" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">主机组ID </label>
+			<div class="controls">
+				<input type="text" class="span6" id="tc_hostgroupid" />
+				<span class="help-block">提示: (必须填写)填写加入该模板的主机组，多个逗号分隔</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">主机ID </label>
+			<div class="controls">
+				<input type="text" class="span6" id="tc_hostid" />
+				<span class="help-block">提示: 填写加入该模板的主机，多个逗号分隔</span>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary" id="tc_button"><i class="icon-ok icon-red"></i> 添加模板</button>
+		</div>
+	</fieldset>
+</form>
+{% end %}
+{% block script %}
+	<script>
+		$("#tc_button").click(function(){
+			if (!$("#tc_hostgroupid").val() || !$("#tc_name").val()){
+				alert("模板名和主机组ID是必填项,需要填写!");
+				return false;
+			}
+			
+			var hostgroups = $("#tc_hostgroupid").val().split(",");
+			var host = new Array();
+			var hostgroup = new Array();
+			for (var i=0; i<hostgroups.length; i++){
+					hostgroup.push({"groupid": hostgroups[i]});
+			}
+			var thing = {"host": $("#tc_name").val(),
+						 "groups": hostgroup};
+			if ($("#tc_hostid").val()){
+				var hosts = $("#tc_hostid").val().split(",");
+				for (var i=0; i<hosts.length; i++){
+					host.push({"hostid": hosts[i]});
+				}
+				thing["hosts"] = host;
+			}
+			$.post("/zabbix/template/create",
+				{_xsrf: getCookie("_xsrf"), params: jQuery.toJSON(thing), time: new Date()},
+				function(msg) {
+					var obj = jQuery.parseJSON(msg);
+					if ( typeof obj == 'string' ){
+						alert(obj);
+					}else{
+						alert("模板:"+$("#tc_name").val()+"创建成功,模板ID: "+obj.templateids);
+					}
+			})
+		});
+	</script>
+{% end %}

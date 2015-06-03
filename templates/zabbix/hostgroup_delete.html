@@ -1,0 +1,39 @@
+{% extends "main.html" %}
+{% block title %}删除主机组{% end %}
+{% block content %}
+<form action="" class="form-horizontal" method="post">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label">主机组ID </label>
+			<div class="controls">
+				<input type="text" class="span6" id="hgd_id" />
+				<span class="help-block">提示: 删除多个主机组用逗号分隔</span>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary" id="hgd_button"><i class="icon-ok icon-red"></i> 删除主机组</button>
+		</div>
+	</fieldset>
+</form>
+{% end %}
+{% block script %}
+	<script>
+		$("#hgd_button").click(function(){
+			if (!$("#hgd_id").val()){
+				alert("请输入需要删除的主机组ID!!!");
+				return false;
+			}
+			var hostgroups = $("#hgd_id").val().split(",");
+			$.post("/zabbix/hostgroup/delete",
+				{_xsrf: getCookie("_xsrf"), params: jQuery.toJSON(hostgroups), time: new Date()},
+				function(msg){
+					var obj = jQuery.parseJSON(msg);
+					if ( typeof obj == 'string' ){
+						alert(obj);
+					}else{
+						alert("主机组: ID为"+obj.groupids+"成功删除.");
+					}
+			});
+		});
+	</script>
+{% end %}

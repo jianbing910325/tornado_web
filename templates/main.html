@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="no-js') }}">   
+    <head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>{{ web_title }}</title>
+        <!-- Bootstrap -->
+        <link href="{{ static_url('css/bootstrap.css') }}" rel="stylesheet" media="screen">
+        <link href="{{ static_url('css/bootstrap-responsive.min.css') }}" rel="stylesheet" media="screen">
+        <link href="{{ static_url('css/styles.css') }}" rel="stylesheet" media="screen">
+        <script src="{{ static_url('js/modernizr-2.6.2-respond-1.1.0.min.js') }}"></script>
+        {% block css  %}{% end %}
+        <script type="application/javascript">
+                var loadInt = function(hid){
+        	        $.ajax({
+        		        type: "GET",
+        		        url: "/interface/count",
+						data: {data: hid},
+        		        success: function(msg){
+        			        $("#"+hid).html(msg);
+        		        }
+        	        });
+                }
+
+                function digui(){
+                    var array = ['host', 'blog', 'user', 'reports', 'errors', 'logs'];
+		            for (var i=0; i<array.length; i++){
+			            loadInt(array[i]);
+		            }
+    	            window.setTimeout("digui()",120000);
+                }
+        </script>
+    </head>
+    
+    <body>
+       <!-- 导航栏 -->
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="/">{{ web_title }}</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right">
+                            <li class="dropdown">
+                                <a href="/user" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i> {{ user }} <i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="/user">用户信息</a>
+                                    </li>
+									<li>
+                                        <a tabindex="-1" href="/user/passwd">修改密码</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a tabindex="-1" href="/logout">注销</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="nav">
+                            <li class="active">
+                                <a href="/dashboard">控制台</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">操作按钮 <b class="caret"></b>
+
+                                </a>
+                                <ul class="dropdown-menu" id="menu1">
+                                    <li>
+                                        <a href="/host/add">新增主机</a>
+                                    </li>
+                                    <li>
+                                        <a href="/blog/add">新增文章</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="/upload">文件上传</a>
+                                    </li>
+                                    <li>
+                                        <a href="/sync">文件同步</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-submenu">
+                                    	<a href="/command">命令操作</a>
+                                    	<ul class="dropdown-menu">
+                                            <li>
+                                                <a href="/command/ips">多机命令</a>
+                                            </li>
+                                            <li>
+                                                <a href="/command/group">院线命令</a>
+                                            </li>
+                                            <li>
+                                                <a href="/command">单机命令</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+				    <li>
+                                        <a href="/command_cron/add">新增定时命令</a>
+                                    </li>
+				    <li>
+                                        <a href="/zabbix">Zabbix Api</a>
+                                    </li>
+                                    <li class="dropdown-submenu">
+                                        <a href="/tools">工具</a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a href="/tools#report">报告</a>
+                                            </li>
+                                            <li>
+                                                <a href="/tools#logs">日志消息</a>
+                                            </li>
+                                            <li>
+                                                <a href="/tools#error">错误</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">显示内容 <i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="/host">主机</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="/blog">文章</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="/sync">文件</a>
+                                    </li>
+                                    <li class="divider"></li>
+				    <li>
+					<a tabindex="-1" href="/command_cron">定时任务结果查询</a>
+				    </li>
+				    <li>
+					<a tabindex="-1" href="/command_cron/status">定时任务查询</a>
+				    </li>
+                                    <li class="divider"></li>
+				    <li>
+                                        <a tabindex="-1" href="/monitoring">监控信息</a>
+                                    </li>
+				    <li>
+                                        <a tabindex="-1" href="/command/log">命令日志</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="#">FAQ</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">用户组 <i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="/userlist">用户列表</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="#">用户消息</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 选择框 -->
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span3" id="sidebar">
+                    <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
+                        <li class="active">
+                            <a href="/dashboard"><i class="icon-chevron-right"></i> 控制台</a>
+                        </li>
+                        <li>
+                            <a href="/host"><i class="icon-chevron-right"></i> 主机</a>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a href="/command">命令操作</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="/command/ips">多机命令</a>
+								</li>
+								<li>
+									<a href="/command/group">组命令</a>
+								</li>
+								<li>
+									<a href="/command">单机命令</a>
+								</li>
+							</ul>
+						</li>
+                        <li>
+                            <a href="/upload"><i class="icon-chevron-right"></i> 文件上传</a>
+                        </li>
+                        <li>
+                            <a href="/sync"><i class="icon-chevron-right"></i> 文件同步</a>
+                        </li>
+                        <li>
+                            <a href="/blog"><i class="icon-chevron-right"></i> 文章</a>
+                        </li>
+                        <li>
+                            <a href="/command/log"><i class="icon-chevron-right"></i> 命令日志</a>
+                        </li>
+						<li>
+                            <a href="/zabbix"><i class="icon-chevron-right"></i> Zabbix Api</a>
+                        </li>
+                        <li>
+                            <a href="/monitoring"><i class="icon-chevron-right"></i> 告警</a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="badge badge-success pull-right" id="host"></span> 主机</a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="badge badge-info pull-right" id="blog"></span> 文章</a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="badge badge-info pull-right" id="user"></span> 用户</a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="badge badge-info pull-right" id="reports"></span> 报告</a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="badge badge-important pull-right" id="errors"></span> 错误</a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="badge badge-warning pull-right" id="logs"></span> 日志消息</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 内容和隐藏选择框-->
+                <div class="span9" id="content">
+					<div class="row-fluid">
+                        <div class="navbar">
+                            <div class="navbar-inner">
+	                            <ul class="breadcrumb">
+	                                <i class="icon-chevron-left hide-sidebar"><a href='#' title="Hide Sidebar" rel='tooltip'>&nbsp;</a></i>
+	                                <i class="icon-chevron-right show-sidebar" style="display:none;"><a href='#' title="Show Sidebar" rel='tooltip'>&nbsp;</a></i>
+	                                <li>
+	                                    <a href="/">主页</a> <span class="divider">/</span>
+	                                </li>
+	                                {% if page %}
+	                                <li>
+	                                    <a href="/dashboard">控制台</a> <span class="divider">/</span>
+	                                </li>
+	                                <li class="active"><a href="#">{{ page }}</a></li>
+	                                {% else %}
+	                                	<li>
+	                                    <a href="/dashboard">控制台</a>
+	                                </li>
+	                                {% end %}
+	                            </ul>
+                          	</div>
+                        </div>
+                    </div>
+                    {% block content  %}{% end %}
+                </div>
+            </div>
+            <hr>
+            <footer>
+                <p style="text-align: center">&copy; 2015 运维管理平台</p>
+            </footer>
+        </div>
+        <script src="{{ static_url('js/jquery-1.9.1.min.js') }}"></script>
+        <script src="{{ static_url('js/bootstrap.js') }}"></script>
+        <script src="{{ static_url('js/scripts.js') }}"></script>
+		{% block script  %}{% end %}
+		<script>
+            digui();
+		</script>
+    </body>
+</html>

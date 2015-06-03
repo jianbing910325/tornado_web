@@ -1,0 +1,53 @@
+{% extends "main.html" %}
+{% block content %}
+<div class="row-fluid">
+    <div class="block">
+	<div class="navbar navbar-inner block-header">
+	    <div class="muted pull-left">{{ page }}</div>
+	    <div class="pull-right">
+		<span class="badge badge-warning">
+		    <a href="#" id="usercount" style="color:white"></a>
+		</span>
+	    </div>
+	</div>
+ 	<div class="block-content collapse in">
+	    <div class="span12">
+		<table class="table table-hover table-condensed table-responsive">
+		    <thead>
+			<tr>
+			    <th>Email</th>
+			    <th>用户名</th>
+			    <th>QQ</th>
+			    <th>手机号</th>
+			</tr>
+		    </thead>
+		    <tbody id="userbody">
+		    </tbody>
+		</table>
+	    </div>
+	</div>
+    </div>
+</div>
+{% end %}
+{% block script %}
+<script src="{{ static_url('js/jquery.json.min.js') }}"></script>
+<script>
+	function getCookie(name) {
+		var c = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+		return c ? c[1] : undefined;
+	}
+    jQuery(document).ready(function() {
+	$.post("/userlist",
+		{_xsrf: getCookie("_xsrf")},
+		function(msg){
+			var obj = jQuery.parseJSON(msg);
+			var txt = "";
+			$.each(obj.data,function(idx,item){
+			    txt += "<tr><td>" + item.user_email + "</td><td>" + item.user_name + "</td><td>" + item.user_qq + "</td><td>" + item.user_phone + "</td></tr>";	
+			});
+			$("#usercount").html(obj.count);
+			$("#userbody").html(txt);
+		});	
+	});
+</script>
+{% end %}

@@ -1,0 +1,39 @@
+{% extends "main.html" %}
+{% block title %}删除主机{% end %}
+{% block content %}
+<form action="" id="form" class="form-horizontal" method="post">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label">主机ID </label>
+			<div class="controls">
+				<input type="text" class="span6" id="hd_id" />
+				<span class="help-block">提示: 删除多个主机用逗号分隔</span>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary" id="hd_button"><i class="icon-ok icon-red"></i> 删除主机</button>
+		</div>
+	</fieldset>
+</form>
+{% end %}
+{% block script %}
+	<script>
+		$("#hd_button").click(function(){
+			if (!$("#hd_id").val()){
+				alert("请输入需要删除的主机ID!!!");
+				return false;
+			}
+			var hosts = $("#hd_id").val().split(",");
+			$.post("/zabbix/host/delete",
+				{_xsrf: getCookie("_xsrf"), params: jQuery.toJSON(hosts), time: new Date()},
+				function(msg){
+					var obj = jQuery.parseJSON(msg);
+					if ( typeof obj == 'string' ){
+						alert(obj);
+					}else{
+						alert("主机: ID为"+obj.hostids+"成功删除.");
+					}
+			});
+		});
+	</script>
+{% end %}

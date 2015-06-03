@@ -1,0 +1,69 @@
+{% extends "main.html" %}
+{% autoescape None %}
+{% block css %}
+{% end %}
+{% block content %}
+<div class="row-fluid">
+    <div class="block-content collapse in">
+	<div class="span12">
+	    <form class="form-horizontal" action="" method="post">
+		<input type="hidden" name="rid" value="{{ data['blog_id'] }}">
+		<fieldset>
+		    <legend>{{ page }}</legend>
+			{% raw xsrf_form_html() %}
+		    <div class="control-group">
+			<label class="control-label" for="head">标题 </label>
+			<div class="controls">
+			    <input type="text" class="span6" id="head" name="title" value="{{ data['blog_title'] }}">
+			</div>
+		    </div>
+		    <div class="control-group">
+			<label class="control-label" for="select01">分类</label>
+			<div class="controls">
+			    <select id="select01" class="chzn-select" name="class">
+				<option value="{{ data['blog_group'] }}">{{ data['blog_group'] }}</option>
+				{% for i in group %}
+				    <option value="{{ i['blog_group'] }}">{{ i['blog_group'] }}</option>
+				{% end %}
+			    </select>
+			</div>
+		    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="content">内容 </label>
+                        <div class="controls">
+                            <textarea class="input-xlarge textarea" placeholder="输入内容 ..." style="width: 95%; height: 350px" id="content" name="content">{{ data['blog_content'] }}</textarea>
+                        </div>
+                    </div>
+		    <div class="form-actions">
+			<button type="submit" class="btn btn-primary" name="submit"><i class="icon-pencil icon-blue"></i> 保存修改</button>
+			<a href="javascript:history.back(-1);" class="btn btn-grey">
+			    <i class="icon-arrow-left"></i>
+				返回
+			</a>
+		    </div>
+		</fieldset>
+	    </form>
+	</div>
+    </div>
+</div>
+{% end %}
+{% block script %}
+<link href="{{ static_url('css/chosen.min.css') }}" rel="stylesheet" media="screen">
+<link href="{{ static_url('css/bootstrap-wysihtml5.css') }}" rel="stylesheet" media="screen">
+<script src="{{ static_url('js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ static_url('js/chosen.jquery.min.js') }}"></script>
+<script src="{{ static_url('js/wysihtml5-0.3.0.js') }}"></script>
+<script src="{{ static_url('js/bootstrap-wysihtml5.js') }}"></script>
+<script src="{{ static_url('js/form-validation.js') }}"></script>
+<script src="{{ static_url('js/jquery.uniform.min.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
+<script>
+	jQuery(document).ready(function() {   
+	   FormValidation.init();
+	});
+	$(function() {
+            $(".chzn-select").chosen();
+            $('.textarea').wysihtml5();
+        });
+</script>
+{% end %}

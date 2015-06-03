@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html class="no-js') }}">   
+    <head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link href="{{ static_url('css/bootstrap.css') }}" rel="stylesheet" media="screen">
+        <link href="{{ static_url('css/bootstrap-responsive.min.css') }}" rel="stylesheet" media="screen">
+        <link href="{{ static_url('css/styles.css') }}" rel="stylesheet" media="screen">
+	</head>
+<body>
+<div class="row-fluid">
+	<div class="block">
+        <div class="navbar navbar-inner block-header">
+            <div class="muted pull-left">{% block title %}{% end %}</div>
+        </div>
+        <div class="block-content collapse in">
+            <div class="span12">
+				{% block content %}{% end %}
+			</div>
+		</div>
+	</div>
+<div>
+<script src="{{ static_url('js/jquery-1.9.1.min.js') }}"></script>
+<script src="{{ static_url('js/bootstrap.js') }}"></script>
+<script src="{{ static_url('js/scripts.js') }}"></script>
+<script src="{{ static_url('js/jquery.json.min.js') }}"></script>
+<script src="{{ static_url('js/jquery.uniform.min.js') }}"></script>
+<script src="{{ static_url('layer/layer.js') }}"></script>
+<script>
+	function getCookie(name) {
+		var c = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+		return c ? c[1] : undefined;
+	}
+</script>
+{% block script %}{% end %}
+</body>
+</html>

@@ -1,0 +1,72 @@
+{% extends "main.html" %}
+{% block content %}
+<div class="row-fluid">
+    <div class="block">
+	<div class="navbar navbar-inner block-header">
+	    <div class="muted pull-left">{{ page }}</div>
+	</div>
+	<div class="block-content collapse in">
+	    <div class="span12">
+		<form action="" id="form" class="form-horizontal" method="post">
+		    <fieldset>
+			<div class="control-group">
+			    <label class="control-label">
+				旧密码
+			    </label>
+			    <div class="controls">
+				<input type="password" id="old_passwd" data-required="1" class="span5 m-wrap" />
+			    </div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label">
+				新密码
+			    </label>
+			    <div class="controls">
+				<input type="password" id="new_passwd1" class="span5 m-wrap" />
+			    </div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label">
+				再输入一次
+			    </label>
+		 	    <div class="controls">
+			        <input type="password" id="new_passwd2" class="span5 m-wrap" />
+			    </div>
+		        </div>
+		        <div class="form-actions">
+		            <button type="button" id="submit" class="btn btn-primary"><i class="icon-ok icon-red"></i> 修改密码</button>
+			    <a href="javascript:history.back(-1);" class="btn btn-grey">
+				<i class="icon-arrow-left"></i>
+				    返回
+			    </a>
+			</div>
+		    </fieldset>
+		</form>
+	    </div>
+	</div>
+    </div>
+</div>
+{% end %}
+{% block script %}
+    <script src="{{ static_url('js/jquery.uniform.min.js') }}"></script>
+    <script src="{{ static_url('layer/layer.js') }}"></script>
+    <script>
+	$(document).ready(function(){
+		function getCookie(name) {
+			var c = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+			return c ? c[1] : undefined;
+		}
+		$("#submit").click(function(){
+		    if ($("#new_passwd1").val() != $("#new_passwd2").val()){
+			layer.tips("两次密码输入不一样,请重新输入",'#new_passwd2');
+			return false;
+		    }
+		    $.post("/user/passwd",
+			{_xsrf: getCookie("_xsrf"), old_passwd: $("#old_passwd").val(), new_passwd: $("#new_passwd1").val(), time: new Date()},
+			function (msg) {
+			    layer.alert(msg);
+		    });
+		});
+	});
+    </script>
+{% end %}

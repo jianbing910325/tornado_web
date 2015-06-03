@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="no-js') }}">   
+    <head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">	
+        <title>{{ web_title }}</title>
+        <link href="{{ static_url('css/bootstrap.css') }}" rel="stylesheet" media="screen">
+        <link href="{{ static_url('css/bootstrap-responsive.min.css') }}" rel="stylesheet" media="screen">
+        <link href="{{ static_url('css/styles.css') }}" rel="stylesheet" media="screen">
+        <script src="{{ static_url('js/modernizr-2.6.2-respond-1.1.0.min.js') }}"></script>
+        <style>
+            .carousel-caption {text-align: center;color: #FFFFFF;}
+        </style>
+    </head>
+    
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="/">{{ web_title }}</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right">
+                            <li class="dropdown">
+                                <a href="/user" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i> {{ user }} <i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="/user">用户信息</a>
+                                    </li>
+									<li>
+                                        <a tabindex="-1" href="/user/passwd">修改密码</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a tabindex="-1" href="/logout">注销</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="nav">
+                            <li class="active">
+                                <a href="/dashboard">控制台</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">操作按钮 <b class="caret"></b>
+
+                                </a>
+                                <ul class="dropdown-menu" id="menu1">                                    
+                                    <li>
+                                        <a href="/host/add">新增主机</a>
+                                    </li>
+                                    <li>
+                                        <a href="/blog/add">新增文章</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="/upload">文件上传</a>
+                                    </li>
+                                    <li>
+                                        <a href="/sync">文件同步</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-submenu">
+                                    	<a href="/command">命令操作</a>
+                                    	<ul class="dropdown-menu">
+                                            <li>
+                                                <a href="/command/ips">多机命令</a>
+                                            </li>
+                                            <li>
+                                                <a href="/command/group">组命令</a>
+                                            </li>
+                                            <li>
+                                                <a href="/command">单机命令</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+									<li>
+                                        <a href="/command_cron/add">新增定时命令</a>
+                                    </li>
+									<li>
+                                        <a href="/zabbix">Zabbix Api</a>
+                                    </li>
+                                    <li class="dropdown-submenu">
+                                        <a href="/tools">工具</a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a href="/tools#report">报告</a>
+                                            </li>
+                                            <li>
+                                                <a href="/tools#logs">主机日志</a>
+                                            </li>
+                                            <li>
+                                                <a href="/tools#error">错误</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">显示内容 <i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="/host">主机</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="/blog">文章</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="/sync">文件</a>
+                                    </li>
+                                    <li class="divider"></li>
+									<li>
+										<a tabindex="-1" href="/command_cron">定时任务结果查询</a>
+									</li>
+									<li>
+										<a tabindex="-1" href="/command_cron/status">定时任务查询</a>
+									</li>
+                                    <li class="divider"></li>
+									<li>
+                                        <a tabindex="-1" href="/monitoring">监控信息</a>
+                                    </li>
+									<li>
+                                        <a tabindex="-1" href="/command/log">命令日志</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="#">FAQ</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">用户组 <i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="/userlist">用户列表</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="#">用户消息</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+	    <div class="row-fluid">
+		<div class="span2"></div>
+		<div class="span8">
+		    <div id="Carousel" class="carousel slide" data-ride="carousel" data-interval="5000">
+			<!-- 轮播（Carousel）指标 -->
+			<ol class="carousel-indicators">
+			{% for i in range(len(index)) %}
+			    {% if i == 0 %}
+			    <li data-target="#Carousel" data-slide-to="{{ i }}" class="active"></li>
+			    {% else %}
+			    <li data-target="#Carousel" data-slide-to="{{ i }}"></li>
+			    {% end %}
+			{% end %}
+			</ol>
+			<!-- 轮播（Carousel）项目 -->
+			<div class="carousel-inner">
+			    {% for i in index %}
+				{% module Index(i) %}
+			    {% end %}
+			</div>
+			<!-- 轮播（Carousel）导航 -->
+			<a class="carousel-control left" href="#Carousel" data-slide="prev">&lsaquo;</a>
+			<a class="carousel-control right" href="#Carousel" data-slide="next">&rsaquo;</a>
+		    </div>
+		</div>
+	        <div class="span2"></div>
+	    </div>
+		<hr>
+		<footer>
+		    <p style="text-align: center">&copy; 2015 运维管理平台</p>
+		</footer>
+	</div>
+    <script src="{{ static_url('js/jquery-1.9.1.min.js') }}"></script>
+    <script src="{{ static_url('js/bootstrap.js') }}"></script>
+    <script src="{{ static_url('js/jquery.json.min.js') }}"></script>
+    <script src="{{ static_url('layer/layer.js') }}"></script>
+    <script src="{{ static_url('layer/extend/layer.ext.js') }}"></script>
+	<script>
+		function getCookie(name) {
+			var c = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+			return c ? c[1] : undefined;
+		}
+	   layer.ready(function(){
+		$.post("/",
+			{_xsrf: getCookie("_xsrf"), time: new Date()},
+		    function(json){
+		        layer.photos({
+		            photos: json
+	 	        });
+		});
+	   });
+	</script>
+    </body>
+</html>

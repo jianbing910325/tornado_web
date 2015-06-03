@@ -1,0 +1,156 @@
+﻿{% extends "main.html" %}
+{% block css %}
+	<link href="{{ static_url('css/chosen.min.css') }}" rel="stylesheet" media="screen">
+{% end %}
+{% block content %}
+<div class="row-fluid">
+	<div class="block">
+		<div class="navbar navbar-inner block-header">
+			<div class="muted pull-left">{{ page }}</div>
+		</div>
+		<div class="block-content collapse in">
+			<div class="span12">
+				<form class="form-horizontal" action="" method="post">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label" for="ip">IP </label>
+							<div class="controls">
+								<select id="ip" class="chzn-select" name="class">
+									<option value="localhost" selected>localhost</option>
+									{% for i in ips %}
+										<option value="{{ i['host_ip'] }}">{{ i["host_ip"] }}</option>
+									{% end %}
+								</select>
+								<button type="button" class="btn btn-success" id="show"><i class="icon-ok icon-red"></i> 查询</button>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div class="span12">
+				<div class="span12">     
+                    <div id="main1" style="height:500px;"></div>
+                </div>
+                <div class="span12">
+                    <div id="main2" style="height:500px"></div>
+                </div>
+			</div>
+		</div>
+	</div>
+</div>
+{% end %}
+{% block script %}
+	<script src="{{ static_url('js/chosen.jquery.min.js') }}"></script>
+	<script src="{{ static_url('js/jquery.json.min.js') }}"></script>
+    <script src="{{ static_url('js/echarts/echarts-all.js') }}"></script>
+	<script>
+		$(".chzn-select").chosen();
+		function getCookie(name) {
+			var c = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+			return c ? c[1] : undefined;
+		}
+		var myChart1 = echarts.init(document.getElementById('main1'));
+		var myChart2 = echarts.init(document.getElementById('main2'));
+		option = {
+			title : {
+				text: '监控图',
+				subtext: '简单监控',
+				x: 'center'
+			},
+			tooltip : {
+				trigger: 'axis'
+			},
+			legend: {
+				data: [],
+				y: 'bottom'
+			},
+			toolbox: {
+				show : false,
+				feature : {
+					mark : {show: true},
+					dataView : {show: true, readOnly: false},
+					magicType : {show: true, type: ['line', 'bar']},
+					restore : {show: true},
+					saveAsImage : {show: true}
+				}
+			},
+			calculable : true,
+			xAxis : [
+			{
+				type : 'category',
+				boundaryGap : false,
+				data : [],
+			}
+			],
+			yAxis : [
+			{
+				type : 'value',
+				axisLabel : {
+					formatter: '{value} %'
+				}
+			}
+			],
+			series : [
+			],
+		};
+		$("#show").click(function(){
+		$.post("/interface/monitoring",
+			{_xsrf: getCookie("_xsrf"), ipaddr: $("#ip").val(), time: new Date()},
+			function (msg){
+				var obj = jQuery.parseJSON(msg);
+				var date_list = new Array();
+				var cpu_use_list = new Array();
+				var cpu_iowait_list = new Array();
+				var mem_use_list = new Array();
+				var swap_use_list = new Array();
+				var root_use_list = new Array();
+				var data0_use_list = new Array();
+				var usr_use_list = new Array();
+				var var_use_list = new Array();
+				var tmp_use_list = new Array();
+				var cpu_load_list_5 = new Array();
+				var cpu_load_list_10 = new Array();
+				var cpu_load_list_15 = new Array();
+				for (var i=0; i<obj.length;i++){
+					//alert(obj[i].host_date);
+					date_list.push(obj[i].host_date);
+					cpu_use_list.push(Number(eval(obj[i].cpu_use)));
+					cpu_iowait_list.push(Number(eval(obj[i].cpu_iowait)));
+					mem_use_list.push(Number(eval(obj[i].mem_use)));
+					swap_use_list.push(Number(eval(obj[i].swap_use))?Number(eval(obj[i].swap_use)):0);
+					root_use_list.push(Number(eval(obj[i].root_use))?Number(eval(obj[i].root_use)):0);
+					data0_use_list.push(Number(eval(obj[i].data0_use))?Number(eval(obj[i].data0_use)):0);
+					usr_use_list.push(Number(eval(obj[i].usr_use))?Number(eval(obj[i].usr_use)):0);
+					var_use_list.push(Number(eval(obj[i].var_use))?Number(eval(obj[i].var_use)):0);
+					tmp_use_list.push(Number(eval(obj[i].tmp_use))?Number(eval(obj[i].tmp_use)):0);
+					var load = obj[i].cpu_load.split(", ");
+					cpu_load_list_5.push(Number(load[0].substring(1,load[0].length)));
+					cpu_load_list_10.push(Number(load[1]));
+					cpu_load_list_15.push(Number(load[2].substring(0,load[2].length-1)));
+				}
+				option.title.text = '使用率 监控界面';
+				option.legend.data = ['CPU使用率','CPU_IOWAIT','内存使用率','SWAP使用率','/使用率','/data0使用率','/var使用率','/usr使用率','/tmp使用率'];
+				option.xAxis[0].data = date_list;
+				option.series[0] = {name: 'CPU使用率',type:'line',data:cpu_use_list};
+				option.series[1] = {name: 'CPU_IOWAIT',type:'line',data:cpu_iowait_list};
+				option.series[2] = {name: '内存使用率',type:'line',data:mem_use_list};
+				option.series[3] = {name: 'SWAP使用率',type:'line',data:swap_use_list};
+				option.series[4] = {name: '/使用率',type:'line',data:root_use_list};
+				option.series[5] = {name: '/data0使用率',type:'line',data:data0_use_list};
+				option.series[6] = {name: '/var使用率',type:'line',data:var_use_list}
+				option.series[7] = {name: '/usr使用率',type:'line',data:usr_use_list}
+				option.series[8] = {name: '/tmp使用率',type:'line',data:tmp_use_list}
+				myChart1.setOption(option, true);
+				option.title.text = 'Cpu Load 监控界面';
+				option.legend.data = ['CPU LOAD 5 MIN','CPU LOAD 10 MIN','CPU LOAD 15 MIN'];
+				option.xAxis[0].data = date_list;
+				option.yAxis[0].axisLabel.formatter = '{value}';
+				option.series = [];
+				option.series[0] = {name: 'CPU LOAD 5 MIN',type:'line',data:cpu_load_list_5};
+				option.series[1] = {name: 'CPU LOAD 10 MIN',type:'line',data:cpu_load_list_10};
+				option.series[2] = {name: 'CPU LOAD 15 MIN',type:'line',data:cpu_load_list_15};
+				myChart2.setOption(option, true);
+		});
+		});
+	</script>
+{% end %}

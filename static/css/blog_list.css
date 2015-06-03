@@ -1,0 +1,44 @@
+div.container
+{
+width:100%;
+margin:0px;
+border:1px solid #DDDDDD;
+line-height:150%;
+}
+div.header,div.footer
+{
+padding:0.5em;
+color:black;
+background-color: #DDDDDD;
+clear:left;
+}
+
+h3.header
+{
+	font-size: 16px;
+	line-height: 25px;
+	padding:0;
+	margin:0;
+}
+
+div.content
+{
+margin: 0 50px 0 50px;
+border: 0 1px 0 1px solid gray;
+padding:1em;
+}
+
+.content p {
+	text-indent: 2em;
+}
+
+h1#title {
+	font-size: 36px;
+	line-height: 30px;
+	font-weight: normal;
+	padding-bottom: 10px;
+	border-bottom: 2px solid #e8e8e8;
+	margin: 10px 0 10px 0;
+	text-align: center;
+	font-family: "Microsoft YaHei","Myriad Pro","Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+}

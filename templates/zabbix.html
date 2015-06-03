@@ -1,0 +1,202 @@
+{% extends "main.html" %}
+{% block content %}
+<div class="row-fluid">
+	<div class="block">
+		<div class="navbar navbar-inner block-header">
+            <div class="muted pull-left">增</div>
+        </div>
+		<div class="block-content collapse in">
+            <div class="span12">
+				<button type="button" class="btn btn-success btn-sm" id="hgc_submit">新增主机组</button>
+				<button type="button" class="btn btn-success btn-sm" id="tc_submit">新增模板</button>
+				<button type="button" class="btn btn-success btn-sm" id="hc_submit">新增主机</button>
+			</div>
+		</div>
+	</div>
+	<div class="block">
+		<div class="navbar navbar-inner block-header">
+            <div class="muted pull-left">删</div>
+        </div>
+		<div class="block-content collapse in">
+            <div class="span12">
+				<button type="button" class="btn btn-danger btn-sm" id="hgd_submit">删除主机组</button>
+				<button type="button" class="btn btn-danger btn-sm" id="td_submit">删除模板</button>
+				<button type="button" class="btn btn-danger btn-sm" id="hd_submit">删除主机</button>
+			</div>
+		</div>
+	</div>
+	<div class="block">
+		<div class="navbar navbar-inner block-header">
+            <div class="muted pull-left">改</div>
+        </div>
+		<div class="block-content collapse in">
+            <div class="span12">
+				<button type="button" class="btn btn-primary btn-sm" id="hgu_submit">修改主机组</button>
+				<button type="button" class="btn btn-primary btn-sm" id="tu_submit">修改模板</button>
+				<button type="button" class="btn btn-primary btn-sm" id="hu_submit">修改主机</button>
+			</div>
+		</div>
+	</div>
+	<div class="block">
+		<div class="navbar navbar-inner block-header">
+            <div class="muted pull-left">查</div>
+        </div>
+		<div class="block-content collapse in">
+            <div class="span12">
+				<button type="button" class="btn btn-info btn-sm" id="hgs_submit">查看主机组</button>
+				<button type="button" class="btn btn-info btn-sm" id="ts_submit">查看模板</button>
+				<button type="button" class="btn btn-info btn-sm" id="hs_submit">查看主机</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% end %}
+{% block script %}
+	<script src="{{ static_url('layer/layer.js') }}"></script>
+	<script>
+	<!-- 增 -->
+		$('#hgc_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/hostgroup_create'
+			});
+			layer.full(index);
+		});
+		
+		$('#tc_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/template_create'
+			});
+			layer.full(index);
+		});
+		
+		$('#hc_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/host_create'
+			});
+			layer.full(index);
+		});
+	<!-- 删 -->
+		$('#hgd_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/hostgroup_delete'
+			});
+			layer.full(index);
+		});
+		
+		$('#td_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/template_delete'
+			});
+			layer.full(index);
+		});
+		
+		$('#hd_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/host_delete'
+			});
+			layer.full(index);
+		});
+	<!-- 改 -->
+		$('#hgu_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/hostgroup_update'
+			});
+			layer.full(index);
+		});
+		
+		$('#tu_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/template_update'
+			});
+			layer.full(index);
+		});
+		
+		$('#hu_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/host_update'
+			});
+			layer.full(index);
+		});
+	<!-- 查 -->
+		$('#hgs_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/hostgroup_select'
+			});
+			layer.full(index);
+		});
+		
+		$('#ts_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/template_select'
+			});
+			layer.full(index);
+		});
+		
+		$('#hs_submit').on('click', function(){
+			var index = layer.open({
+				type: 2,
+				title: 'zabbix子窗口',
+				maxmin: true,
+				shadeClose: false, //点击遮罩关闭层
+				area : ['800px' , '460px'],
+				content: '/zabbix/host_select'
+			});
+			layer.full(index);
+		});
+	</script>
+{% end %}

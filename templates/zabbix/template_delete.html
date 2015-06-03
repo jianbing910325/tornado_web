@@ -1,0 +1,39 @@
+{% extends "main.html" %}
+{% block title %}删除模板{% end %}
+{% block content %}
+<form action="" class="form-horizontal" method="post">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label">模板ID </label>
+			<div class="controls">
+				<input type="text" class="span6" id="td_id" />
+				<span class="help-block">提示: 删除多个模板用逗号分隔</span>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary" id="td_button"><i class="icon-ok icon-red"></i> 删除模板</button>
+		</div>
+	</fieldset>
+</form>
+{% end %}
+{% block script %}
+	<script>
+		$("#td_button").click(function(){
+			if (!$("#td_id").val()){
+				alert("请输入需要删除的模板ID!!!");
+				return false;
+			}
+			var templates = $("#td_id").val().split(",");
+			$.post("/zabbix/template/delete",
+				{_xsrf: getCookie("_xsrf"), params: jQuery.toJSON(templates), time: new Date()},
+				function(msg){
+					var obj = jQuery.parseJSON(msg);
+					if ( typeof obj == 'string' ){
+						alert(obj);
+					}else{
+						alert("模板: ID为"+obj.templateids+"成功删除.");
+					}
+			});
+		});
+	</script>
+{% end %}

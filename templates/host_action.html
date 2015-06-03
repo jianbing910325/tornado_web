@@ -1,0 +1,110 @@
+﻿{% extends "main.html" %}
+{% block content %}
+<div class="row-fluid">
+	<!-- block -->
+	<div class="block">
+		<div class="navbar navbar-inner block-header">
+			<div class="muted pull-left">{{ page }}</div>
+		</div>
+		<div class="block-content collapse in">
+			<div class="span12">
+				<!-- BEGIN FORM-->
+				<form action="" id="form" class="form-horizontal" method="post">
+					<fieldset>
+						<div class="alert alert-error hide">
+							<button class="close" data-dismiss="alert"></button>
+							表单输入有误，请重新检查！！！
+						</div>
+						<div class="alert alert-success hide">
+							<button class="close" data-dismiss="alert"></button>
+							表单输出正确！
+						</div>
+						{% raw xsrf_form_html() %}
+						<div class="control-group">
+							<label class="control-label">
+								主机名
+								<span class="required">*</span>
+							</label>
+							<div class="controls">
+								<input type="text" name="host_name" data-required="1" class="span6 m-wrap" />
+								<span class="help-block">PS: 主机名最好是 IDC名_机房地址_IP地址_服务</span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">
+								资产编码
+								<span class="required">*</span>
+							</label>
+							<div class="controls">
+								<input name="host_code" type="text" class="span6 m-wrap" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">
+								主机IP
+								<span class="required">*</span>
+							</label>
+							<div class="controls">
+								<input name="host_ip" type="text" class="span6 m-wrap" />
+								<span class="help-block">例如: 10.100.0.1 或 192.168.100.1</span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">
+								主机密码
+								<span class="required">*</span>
+							</label>
+							<div class="controls">
+								<input name="host_passwd" type="text" class="span6 m-wrap" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">
+								主机组
+								<span class="required">*</span>
+							</label>
+							<div class="controls">
+								<select class="span6 m-wrap" name="host_group">
+									<option value="" selected>选择...</option>
+									{% for i in group %}
+									<option value="{{ i['host_group'] }}">{{ i["host_group"] }}</option>
+									{% end %}
+								</select>
+							</div>							
+						</div>
+						<div class="control-group">
+							<label class="control-label">
+								系统版本
+								<span class="required">*</span>
+							</label>
+							<div class="controls">
+								<input name="version_sys" type="text" class="span6 m-wrap" />
+								<span class="help-block">例如: centos 5.8或centos 6.3和其他系统版本</span>
+							</div>
+						</div>
+						<div class="form-actions">
+							<button type="submit" class="btn btn-primary"><i class="icon-ok icon-red"></i> 添加主机</button>
+							<a href="javascript:history.back(-1);" class="btn btn-grey">
+							<i class="icon-arrow-left"></i>
+							返回
+							</a>
+						</div>
+					</fieldset>
+				</form>
+				<!-- END FORM-->
+			</div>
+		</div>
+	</div>
+	<!-- /block -->
+</div>
+{% end %}
+{% block script %}
+<script src="{{ static_url('js/jquery.uniform.min.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
+<script src="{{ static_url('js/form-validation.js') }}"></script>
+<script>
+	jQuery(document).ready(function() {   
+	   FormValidation.init();
+	});
+</script>
+{% end %}

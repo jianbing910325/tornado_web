@@ -1,0 +1,190 @@
+{% extends "main.html" %}
+{% block css %}
+    <script type="application/javascript">
+        var loadTable = function(hid){
+	    $.post("/interface/count",
+			{_xsrf: getCookie("_xsrf"),data: hid,time: new Date()},
+		    function (msg){
+			var obj = jQuery.parseJSON(msg);
+			$("#count"+hid).html(obj.count);
+			var txt = "";
+			$.each(obj.data,function(idx,item){
+			    txt += "<tr><td>" + item.id + "</td><td>" + item.message + "</td></tr>";	
+			});
+			$("#"+hid).html(txt);
+	    });
+	}
+        function digui2(){
+            var load = ['report', 'error', 'log'];
+            for (var i=0; i<load.length; i++){
+   		loadTable(load[i]);
+    	    }
+            window.setTimeout("digui2()",30000);
+        }
+    </script>
+{% end %}
+{% block content %}
+    <div class="row-fluid">
+        <div class="block">
+            <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">本机监控</div>
+                <div class="pull-right">
+		    <span class="badge badge-warning">
+			<a href="/monitoring" style="color:white">更多</a>
+		    </span>
+                </div>
+            </div>
+            <div class="block-content collapse in">
+                <div class="span5">     
+                    <div id="main1" style="height:300px"></div>
+                </div>
+                <div class="span5">
+                    <div id="main2" style="height:300px"></div>
+                </div>
+                <div class="span5">
+                    <div id="main3" style="height:300px"></div>
+                </div>
+                <div class="span5">
+                    <div id="main4" style="height:300px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+	<div class="block">
+	    <div class="navbar navbar-inner block-header">
+		<div class="muted pull-left">报告(最近的5个)</div>
+		<div class="pull-right">
+		    <span class="badge badge-info">
+			<a href="/monitoring/views" id="countreport" style="color:white"></a>
+		    </span>
+		</div>
+	    </div>
+	    <div class="block-content collapse in">
+		<div class="span12">
+		    <table class="table table-condensed table-hover">
+			<thead>
+			    <tr>
+				<th>编码</th>
+                                <th>报告信息</th>
+			    </tr>
+			</thead>
+			<tbody id="report">
+			</tbody>
+		    </table>
+		</div>
+	    </div>
+	</div>
+    </div>
+
+    <div class="row-fluid">
+	<div class="block">
+	    <div class="navbar navbar-inner block-header">
+		<div class="muted pull-left">错误(最近的5个)</div>
+		<div class="pull-right">
+		    <span class="badge badge-info">
+			<a href="#" id="counterror" style="color:white"></a>
+		    </span>
+		</div>
+	    </div>
+	    <div class="block-content collapse in">
+		<div class="span12">
+		    <table class="table table-condensed table-hover">
+			<thead>
+			    <tr>
+				<th>编码</th>
+                                <th>错误信息</th>
+			    </tr>
+			</thead>
+			<tbody id="error">
+			</tbody>
+		    </table>
+		</div>
+	    </div>
+	</div>
+    </div>
+
+    <div class="row-fluid">
+	<div class="block">
+	    <div class="navbar navbar-inner block-header">
+		<div class="muted pull-left">日志(最近的5个)</div>
+		<div class="pull-right">
+		    <span class="badge badge-info">
+			<a href="#" id="countlog" style="color:white"></a>
+		    </span>
+		</div>
+	    </div>
+	    <div class="block-content collapse in">
+		<div class="span12">
+		    <table class="table table-condensed table-hover">
+			<thead>
+			    <tr>
+				<th>编码</th>
+                                <th>日志信息</th>
+			    </tr>
+			</thead>
+			<tbody id="log">
+			</tbody>
+		    </table>
+		</div>
+	    </div>
+	</div>
+    </div>
+{% end %}
+{% block script %}
+	<script src="{{ static_url('js/jquery.json.min.js') }}"></script>
+        <script src="{{ static_url('js/echarts/echarts-all.js') }}"></script>
+        <script>
+	    var myChart1 = echarts.init(document.getElementById('main1'));
+	    var myChart2 = echarts.init(document.getElementById('main2'));
+	    var myChart3 = echarts.init(document.getElementById('main3'));
+	    var myChart4 = echarts.init(document.getElementById('main4'));
+	    option = {
+		tooltip : {
+			formatter: "{a} <br/>{b} : {c}%"
+		},
+		toolbox: {
+			show : false,
+			feature : {
+				mark : {show: true},
+				restore : {show: true},
+				saveAsImage : {show: true}
+			}
+		},
+		series : [
+		{
+			name:'CPU_USE',
+			type:'gauge',
+			detail : {formatter:'{value}%'},
+			data:[{value: 50,name:"cpu使用率"}]
+		}
+		]
+	    };
+
+	    self.clearInterval(num);
+	    var num = self.setInterval(function (){
+	        $.get("/interface/monitoring",
+		    function (msg){
+			var obj = jQuery.parseJSON(msg);
+			option.series[0].name = "CPU_USE";
+			option.series[0].data[0].value = obj.cpu_use?obj.cpu_use:0;
+			option.series[0].data[0].name = "cpu使用率";
+			myChart1.setOption(option, true);
+			option.series[0].name = "CPU_IOWAIT";
+			option.series[0].data[0].value = obj.cpu_iowait?obj.cpu_iowait:0;
+			option.series[0].data[0].name = "cpu_iowait值";
+			myChart2.setOption(option, true);
+			option.series[0].name = "MEM_USE";
+			option.series[0].data[0].value = obj.mem_use?obj.mem_use:0;
+			option.series[0].data[0].name = "内存使用率";
+			myChart3.setOption(option, true);
+			option.series[0].name = "SWAP_USE";
+			option.series[0].data[0].value = obj.swap_use?obj.swap_use:0;
+			option.series[0].data[0].name = "SWAP使用率";
+			myChart4.setOption(option, true);
+	        });
+	    },2000);
+            digui2();
+        </script>
+{% end %}

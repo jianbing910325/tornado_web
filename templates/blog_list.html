@@ -1,0 +1,38 @@
+﻿{% extends "main.html" %}
+{% block css %}
+<link href="{{ static_url('css/blog_list.css') }}" rel="stylesheet" media="screen">
+<script>
+function checkaction(t){
+	if (t == 1){
+		document.form.action = "/blog/edit";
+	}else{
+		document.form.action = "/blog/del";
+	}
+	form.submit(); 
+}
+</script>
+{% end %}
+{% block content %}
+<div class="row-fluid">
+	<div class="span12 block">
+		<div class="container">
+			<div class="header"><h3 class="header">{{ data['blog_ctime'] }} | 分类: {{ data['blog_group'] }} | 作者: {{ data['user_id'] }}</h3></div>
+			<div class="content">
+				<h1 id="title">{{ data['blog_title'] }}</h1>
+				{% for i in data['blog_content'] %}
+					<p>{% raw i %}</p>
+				{% end %}
+			</div>
+			{% if user == data['user_email'] %}
+			<div class="footer">
+				<form action="" method="get" align="right" name="form">
+					<input type="hidden" name="blog_id" value="{{ data['blog_id'] }}">
+					<button class="btn" name="edit" onclick="checkaction(1);"><i class="icon-pencil icon-blue"></i> 修改</button>
+					<button class="btn" name="del" onclick="checkaction(0);"><i class="icon-remove icon-red"></i> 删除</button>
+				</form>
+			</div>
+			{% end %}
+		</div>
+	</div>
+</div>
+{% end %}

@@ -1,0 +1,62 @@
+{% extends "main.html" %}
+{% block title %}修改模板{% end %}
+{% block content %}
+<form action="" class="form-horizontal" method="post">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label">模板ID </label>
+			<div class="controls">
+				<input type="text" class="span6" id="tu_id" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">模板名 </label>
+			<div class="controls">
+				<input type="text" class="span6" id="tu_host" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">模板可见名称 </label>
+			<div class="controls">
+				<input type="text" class="span6" id="tu_name" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">模板介绍 </label>
+			<div class="controls">
+				<input type="text" class="span6" id="tu_description" />
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary" id="tu_button"><i class="icon-ok icon-red"></i> 修改模板</button>
+		</div>
+	</fieldset>
+</form>
+{% end %}
+{% block script %}
+	<script>
+		$("#tu_button").click(function(){
+			if (!$("#tu_host").val() || !$("#tu_id").val()){
+				alert("模板ID、模板名不能为空!!!");
+				return false;
+			}
+			var thing = {"templateid": $("#tu_id").val(), "host": $("#tu_host").val()};
+			if ($("#tu_name").val()){
+				thing["name"] = $("#tu_name").val();
+			}
+			if ($("#tu_description").val()){
+				thing["description"] = $("#tu_description").val();
+			}
+			$.post("/zabbix/template/update",
+				{_xsrf: getCookie("_xsrf"), params: jQuery.toJSON(thing), time: new Date()},
+				function(msg) {
+					var obj = jQuery.parseJSON(msg);
+					if ( typeof obj == 'string' ){
+						alert(obj);
+					}else{
+						alert("模板: ID为"+obj.templateids+"的模板的模板名修改为:"+$("#tu_name").val());
+					}
+			});
+		});
+	</script>
+{% end %}

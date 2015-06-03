@@ -1,0 +1,100 @@
+{% extends "main.html" %}
+{% block css %}
+{% end %}
+{% block content %}
+<div class="row-fluid">
+    <div class="block">
+	<div class="navbar navbar-inner block-header">
+	    <div class="muted pull-left">{{ page }}</div>
+	</div>
+	<div class="block-content collapse in">
+	    <div class="span12">
+		<form action="" id="form" class="form-horizontal" method="post">
+		    <fieldset>
+			{% raw xsrf_form_html() %}
+			<div class="control-group">
+			    <label class="control-label" for="task_name">
+				任务名称
+			    </label>
+			    <div class="controls">
+				<input type="text" id="task_name" data-required="1" class="span4 m-wrap" />
+			    </div>
+			</div>
+			<div class="control-group">
+                            <label class="control-label" for="date">任务时间</label>
+                            <div class="controls">
+                                <input class="laydate-icon" placeholder="YYYY-MM-DD hh:mm:ss" id="date" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})"/>
+				<p class="help-block">任务时间必须要大于当前时间.</p>
+                            </div>
+                        </div>
+			<div class="control-group">
+			    <label class="control-label" for="command">
+				命令
+			    </label>
+			    <div class="controls">
+				<input id="command" type="text" class="span6 m-wrap" />
+			    </div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label" for="host_ip">
+				主机IP
+			    </label>
+			    <div class="controls">
+				<input id="host_ip" type="text" class="span6 m-wrap" />
+				<p class="help-block">多个IP以逗号分隔</p>
+			    </div>							
+			</div>
+			<div class="form-actions">
+			    <button type="button" class="btn btn-success" id="task_button"><i class="icon-ok icon-red"></i> 添加任务</button>
+			    <a href="javascript:history.back(-1);" class="btn btn-grey"><i class="icon-arrow-left"></i>返回</a>
+			</div>
+		    </fieldset>
+		</form>
+	    </div>
+	</div>
+    </div>
+</div>
+{% end %}
+{% block script %}
+	<script src="{{ static_url('js/jquery.uniform.min.js') }}"></script>
+	<script src="{{ static_url('js/jquery.json.min.js') }}"></script>
+	<script src="{{ static_url('laydate/laydate.js') }}"></script>
+	<script src="{{ static_url('layer/layer.js') }}"></script>
+	<script language="javascript" type="text/javascript">
+	$("#task_button").click(function(){
+	    if (!$("#task_name").val()){
+		layer.tips("请输入任务名称!","#task_name");
+		return false;
+	    }
+	    if (!$("#date").val()){
+		layer.tips("时间不能为空!","#date");
+		return false;
+	    }
+	    if (!$("#command").val()){
+		layer.tips("命令不能为空!","#command");
+		return false;
+	    }
+	    if (!$("#host_ip").val()){
+		layer.tips("请输入一个或多个影院IP!","#host_ip");
+		return false;
+	    }
+	    if($("#date").val()){
+		var str = $("#date").val().replace(/-/g,"/");
+		var date = new Date(str);
+		    if (date < new Date()) {
+		 	layer.tips("输入时间不能是过去式!","#date");
+			return false;
+		    }
+	    }
+	    layer.open({
+		type: 2,
+		title: '影院确认界面',
+		shadeClose: true,
+		shade: false,
+		maxmin: true,
+		area: ['800px','600px'],
+		content: '/command_cron/c_add?task_name='+$("#task_name").val()+'&task_date='+$("#date").val()+'&task_command='+$("#command").val()+'&ipaddr='+$("#host_ip").val()
+	    });
+	});
+	</script>
+{% end %}

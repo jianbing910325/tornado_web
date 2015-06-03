@@ -1,0 +1,30 @@
+{% extends "main.html" %}
+{% block title %}查询主机组{% end %}
+{% block content %}
+<table class="table">
+    <thead>
+	<tr>
+	    <th>主机组ID</th>
+	    <th>主机组名</th>
+	</tr>
+    </thead>
+    <tbody id="echogroup">
+    </tbody>
+</table>
+{% end %}
+{% block script %}
+    <script>
+	layer.load(2);
+	$.post("/zabbix/hostgroup/get",
+		{_xsrf: getCookie("_xsrf"), params: '{"output": "extend"}', time: new Date()},
+		function(msg) {
+			layer.closeAll('loading');
+			var txt = "";
+			var obj = jQuery.parseJSON(msg);
+			$.each(obj,function(idx,item){
+				txt += "<tr><td>" + item.groupid + "</td><td>" + item.name + "</td></tr>";
+						$("#echogroup").html(txt);	
+			});
+	});
+    </script>
+{% end %}

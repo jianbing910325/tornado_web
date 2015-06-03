@@ -1,0 +1,34 @@
+{% extends "main.html" %}
+{% block title %}查询主机{% end %}
+{% block content %}
+<table class="table">
+    <thead>
+	<tr>
+	    <th>主机ID</th>
+	    <th>主机IP</th>
+	    <th>主机别名</th>
+	    <th>主机状态</th>
+	    <th>agent状态</th>
+	</tr>
+    </thead>
+    <tbody id="echohost">
+    </tbody>
+</table>
+{% end %}
+{% block script %}
+    <script>
+	layer.load(2);
+	layer.msg('提示:agent状态(0为未知agent,1为可达,2为不可达)',{offset:0,shift:1,icon:1});
+	$.post("/zabbix/host/get",
+		{_xsrf: getCookie("_xsrf"), params: '{"output": "extend"}',time: new Date()},
+		function(msg) {
+			layer.closeAll('loading');
+			var txt = "";
+			var obj = jQuery.parseJSON(msg);
+			$.each(obj,function(idx,item){
+				txt += "<tr><td>" + item.hostid + "</td><td>" + item.host + "</td><td>" + item.name + "</td><td>" + item.status + "</td><td>" + item.available + "</td></tr>";
+				$("#echohost").html(txt);	
+			});
+	});
+    </script>
+{% end %}
