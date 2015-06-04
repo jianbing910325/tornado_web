@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 
 
-insert into user(`user_id`,`user_email`,`user_passwd`,`user_name`,`user_qq`,`user_phone`,`auth_id`) values(null,'admin@test.com',md5('adminadmin'),'管理员','123456','12345678987',1),(null,'jianbing@test.com',md5('jianbingtest123'),'李健兵','530221519','18612411325',2);
+insert into user(`user_id`,`user_email`,`user_passwd`,`user_name`,`user_qq`,`user_phone`,`auth_id`) values(null,'admin@test.com','394decafe4a9e1dbde3aa304625b81d3','管理员','123456','12345678987',1),(null,'jianbing@test.com','3ccc0804fd80e34626d3a57d83005297','李健兵','530221519','18612411325',2);
 
 CREATE TABLE IF NOT EXISTS `blog_group` (
 	`id` int(11) AUTO_INCREMENT NOT NULL,
