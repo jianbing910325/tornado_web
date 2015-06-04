@@ -54,7 +54,7 @@ class CommandInterface(BaseHandler):
         try:
             data = self.__db.get("select host_name,host_passwd from host where \
                             host_ip = '{0}' limit 1;".format(ipaddr))
-            passwd = data["host_passwd"]
+            passwd = self.lock.decrypt(data["host_passwd"])
         except Exception:
             raise tornado.web.HTTPError(500)
         
@@ -120,7 +120,7 @@ class FileInterface(BaseHandler):
         try:
             data = self.__db.get("select host_name,host_passwd from host where \
                             host_ip = '{0}' limit 1;".format(ipaddr))
-            passwd = data["host_passwd"]
+            passwd = self.lock.decrypt(data["host_passwd"])
         except Exception:
             raise tornado.web.HTTPError(500)
         ssh = paramiko.SSHClient()

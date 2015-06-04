@@ -6,6 +6,7 @@ import tornado.web
 import md5
 import json
 from models import session
+from models.Crypto_string import Locker
 
 class BaseHandler(tornado.web.RequestHandler):
     def __init__(self, *argc, **argkw):
@@ -15,6 +16,10 @@ class BaseHandler(tornado.web.RequestHandler):
     @property
     def db(self):
         return self.application.db
+
+    @property
+    def lock(self):
+        return Locker('This is a key123','This is an IV456')
 
     def initialize(self):
         self.title = "运维管理平台"
@@ -65,10 +70,10 @@ class LoginHandler(BaseHandler):
     @tornado.web.asynchronous
     def post(self):
         username = self.get_argument("username")
-        password = md5.md5(username.split("@")[0]+self.get_argument("password"))
+        password = username.split("@")[0]+self.get_argument("password")
         passwd = self.db.get("select user_passwd from user where user_email = '%s'"%username)
         if passwd is not None:
-            if passwd["user_passwd"] == password.hexdigest():
+            if passwd["user_passwd"] == self.lock.encrypt(password):
                 self.session["user_name"] = username
                 self.session.save()
                 self.write('1')

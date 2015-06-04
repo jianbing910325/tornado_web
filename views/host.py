@@ -48,7 +48,7 @@ class HostACHandler(BaseHandler):
             values = (self.get_argument('host_name'),
                       self.get_argument('host_code'),
                       self.get_argument('host_ip'),
-                      self.get_argument('host_passwd'),
+                      self.lock.encrypto(self.get_argument('host_passwd')),
                       self.get_argument('host_group'),
                       self.get_argument('version_sys'))
             self.db.execute("insert into host values(NULL,'%s','%s','%s','%s','%s','%s');"%(values))
@@ -58,7 +58,7 @@ class HostACHandler(BaseHandler):
             field = {"host_name": self.get_argument('host_name'),
                      "host_code": self.get_argument('host_code'),
                      "host_ip": self.get_argument('host_ip'),
-                     "host_passwd": self.get_argument('host_passwd'),
+                     "host_passwd": self.lock.encrypto(self.get_argument('host_passwd')),
                      "host_group": self.get_argument('host_group'),
                      "version_sys": self.get_argument('version_sys'),
                      "id": self.get_argument('rid')}
