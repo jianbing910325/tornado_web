@@ -20,7 +20,7 @@
 	<script>
 		$("#td_button").click(function(){
 			if (!$("#td_id").val()){
-				alert("请输入需要删除的模板ID!!!");
+				layer.tips("请输入需要删除的模板ID!!!","#td_id");
 				return false;
 			}
 			var templates = $("#td_id").val().split(",");
@@ -29,9 +29,9 @@
 				function(msg){
 					var obj = jQuery.parseJSON(msg);
 					if ( typeof obj == 'string' ){
-						alert(obj);
+						layer.alert(obj);
 					}else{
-						alert("模板: ID为"+obj.templateids+"成功删除.");
+						layer.alert("模板: ID为"+obj.templateids+"成功删除.");
 					}
 			});
 		});

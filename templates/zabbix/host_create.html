@@ -39,7 +39,7 @@
 	<script>
 		$("#hc_button").click(function(){
 			if (!$("#hc_host").val() || !$("#hc_name").val() || !$("#hc_hostgroupid").val()) {
-				alert("主机IP,主机名,主机组ID都为必填项，请填写!");
+				layer.tips("主机IP,主机名,主机组ID都为必填项，请填写!","#hc_host");
 				return false;
 			}
 			
@@ -76,9 +76,9 @@
 				function(msg) {
 					var obj = jQuery.parseJSON(msg);
 					if ( typeof obj == 'string' ){
-						alert(obj);
+						layer.alert(obj);
 					}else{
-						alert("主机:"+$("#hc_name").val()+"创建成功,主机IP:"+$("#hc_host").val()+" 主机ID: "+obj.hostids);
+						layer.alert("主机:"+$("#hc_name").val()+"创建成功,主机IP:"+$("#hc_host").val()+" 主机ID: "+obj.hostids);
 					}
 			})
 		});

@@ -25,7 +25,7 @@
 	<script>
 		$("#hgu_button").click(function(){
 			if (!$("#hgu_name").val() || !$("#hgu_id").val()){
-				alert("主机组ID、主机组名不能为空!!!");
+				layer.tips("主机组ID、主机组名不能为空!!!","#hgu_name");
 				return false;
 			}
 			var thing = {groupid: $("#hgu_id").val(), name: $("#hgu_name").val()};
@@ -34,9 +34,9 @@
 				function(msg) {
 					var obj = jQuery.parseJSON(msg);
 					if ( typeof obj == 'string' ){
-						alert(obj);
+						layer.alert(obj);
 					}else{
-						alert("主机组: ID为"+obj.groupids+"的主机组的组名修改为:"+$("#hgu_name").val());
+						layer.alert("主机组: ID为"+obj.groupids+"的主机组的组名修改为:"+$("#hgu_name").val());
 					}
 			});
 		});

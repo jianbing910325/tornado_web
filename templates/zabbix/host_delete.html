@@ -20,7 +20,7 @@
 	<script>
 		$("#hd_button").click(function(){
 			if (!$("#hd_id").val()){
-				alert("请输入需要删除的主机ID!!!");
+				layer.tips("请输入需要删除的主机ID!!!","#hd_id");
 				return false;
 			}
 			var hosts = $("#hd_id").val().split(",");
@@ -29,9 +29,9 @@
 				function(msg){
 					var obj = jQuery.parseJSON(msg);
 					if ( typeof obj == 'string' ){
-						alert(obj);
+						layer.alert(obj);
 					}else{
-						alert("主机: ID为"+obj.hostids+"成功删除.");
+						layer.alert("主机: ID为"+obj.hostids+"成功删除.");
 					}
 			});
 		});

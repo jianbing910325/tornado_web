@@ -47,7 +47,7 @@
 	<script>
 		$("#hu_button").click(function(){
 			if (!( $("#hu_id").val() && ( $("#hu_hostgroups").val() || $("#hu_templates").val() || $("#hu_templates_clear").val() || $("#hu_status").val() ))){
-				alert("除填写主机ID外,其他必填写一项作为处理!!!");
+				layer.tips("除填写主机ID外,其他必填写一项作为处理!!!","#hu_id");
 				return false;
 			}
 			
@@ -85,9 +85,9 @@
 				function(msg) {
 					var obj = jQuery.parseJSON(msg);
 					if ( typeof obj == 'string' ){
-						alert(obj);
+						layer.alert(obj);
 					}else{
-						alert("主机: ID为"+obj.hostids+"更改成功.");
+						layer.alert("主机: ID为"+obj.hostids+"更改成功.");
 					}
 			}); 			
 		});

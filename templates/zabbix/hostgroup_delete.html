@@ -20,7 +20,7 @@
 	<script>
 		$("#hgd_button").click(function(){
 			if (!$("#hgd_id").val()){
-				alert("请输入需要删除的主机组ID!!!");
+				layer.tips("请输入需要删除的主机组ID!!!","#hgd_id");
 				return false;
 			}
 			var hostgroups = $("#hgd_id").val().split(",");
@@ -29,9 +29,9 @@
 				function(msg){
 					var obj = jQuery.parseJSON(msg);
 					if ( typeof obj == 'string' ){
-						alert(obj);
+						layer.alert(obj);
 					}else{
-						alert("主机组: ID为"+obj.groupids+"成功删除.");
+						layer.alert("主机组: ID为"+obj.groupids+"成功删除.");
 					}
 			});
 		});

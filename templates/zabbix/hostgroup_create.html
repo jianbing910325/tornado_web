@@ -19,7 +19,7 @@
 	<script>
 		$("#hgc_button").click(function(){
 			if (!$("#hgc_name").val()){
-					alert("请输入主机组名!!!");
+					layer.tips("请输入主机组名!!!","#hgc_name");
 					return false;
 			}
 			$.post("/zabbix/hostgroup/create",
@@ -27,9 +27,9 @@
 				function(msg) {
 					var obj = jQuery.parseJSON(msg);
 					if ( typeof obj == 'string' ){
-						alert(obj);
+						layer.alert(obj);
 					}else{
-						alert("主机组: "+$("#hgc_name").val()+"创建成功,主机组ID: "+obj.groupids);
+						layer.alert("主机组: "+$("#hgc_name").val()+"创建成功,主机组ID: "+obj.groupids);
 					}
 			})
 		});

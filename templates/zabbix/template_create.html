@@ -33,7 +33,7 @@
 	<script>
 		$("#tc_button").click(function(){
 			if (!$("#tc_hostgroupid").val() || !$("#tc_name").val()){
-				alert("模板名和主机组ID是必填项,需要填写!");
+				layer.tips("模板名和主机组ID是必填项,需要填写!","#tc_hostgroupid");
 				return false;
 			}
 			
@@ -57,9 +57,9 @@
 				function(msg) {
 					var obj = jQuery.parseJSON(msg);
 					if ( typeof obj == 'string' ){
-						alert(obj);
+						layer.alert(obj);
 					}else{
-						alert("模板:"+$("#tc_name").val()+"创建成功,模板ID: "+obj.templateids);
+						layer.alert("模板:"+$("#tc_name").val()+"创建成功,模板ID: "+obj.templateids);
 					}
 			})
 		});

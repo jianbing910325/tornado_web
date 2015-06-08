@@ -37,7 +37,7 @@
 	<script>
 		$("#tu_button").click(function(){
 			if (!$("#tu_host").val() || !$("#tu_id").val()){
-				alert("模板ID、模板名不能为空!!!");
+				layer.tips("模板ID、模板名不能为空!!!","#tu_host");
 				return false;
 			}
 			var thing = {"templateid": $("#tu_id").val(), "host": $("#tu_host").val()};
@@ -52,9 +52,9 @@
 				function(msg) {
 					var obj = jQuery.parseJSON(msg);
 					if ( typeof obj == 'string' ){
-						alert(obj);
+						layer.alert(obj);
 					}else{
-						alert("模板: ID为"+obj.templateids+"的模板的模板名修改为:"+$("#tu_name").val());
+						layer.alert("模板: ID为"+obj.templateids+"的模板的模板名修改为:"+$("#tu_name").val());
 					}
 			});
 		});

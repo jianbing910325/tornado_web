@@ -27,7 +27,7 @@
 			var obj = jQuery.parseJSON(msg);
 			$.each(obj,function(idx,item){
 				txt += "<tr><td>" + item.hostid + "</td><td>" + item.host + "</td><td>" + item.name + "</td><td>" + item.status + "</td><td>" + item.available + "</td></tr>";
-				$("#echohost").html(txt);	
+				$("#echohost").html(txt);
 			});
 	});
     </script>
