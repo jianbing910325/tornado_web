@@ -9,7 +9,7 @@ from index import BaseHandler
 class HostHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        thead = thead = ["编码","主机名","资产编码","主机IP","主机密码","主机组","系统版本"]
+        thead = thead = ["编码","主机名","资产编码","主机IP","主机组","系统版本"]
         data = self.db.query("select * from host")
         self.render("host.html",
                     web_title=self.title,
