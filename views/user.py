@@ -95,10 +95,10 @@ class UserPasswdHandler(BaseHandler):
     def PostData(self,old,new):
         data = self.db.get("select user_email,user_passwd from user where user_email = '%s' limit 1"%self.current_user)
         email = data["user_email"].split("@")[0]
-        passwd = md5.md5(email+old).hexdigest()
+        passwd = self.lock.encrypt(email+old)
         if  passwd == data['user_passwd']:
             sql = "update user set user_passwd = '%s' where user_email = '%s' limit 1"
-            data = self.db.execute_rowcount(sql%(md5.md5(email+new).hexdigest(),self.current_user))
+            data = self.db.execute_rowcount(sql%(self.lock.encrypt(email+new),self.current_user))
             return data and '密码修改成功' or '修改中出错,联系管理员查看日志!'
         else:
             return '旧密码不对，请重新输入'
